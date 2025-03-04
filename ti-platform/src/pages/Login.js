@@ -1,47 +1,37 @@
-// src/pages/Login.js
-import React from 'react';
-import styled from 'styled-components';
-
-const FormContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 50px;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  margin: 10px;
-  width: 200px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-const Button = styled.button`
-  padding: 10px;
-  margin-top: 20px;
-  width: 220px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #45a049;
-  }
-`;
+import React, { useState } from "react";
 
 const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Login realizado:", { email, password });
+  };
+
   return (
-    <FormContainer>
-      <h1>Login</h1>
-      <form>
-        <Input type="email" placeholder="Email" />
-        <Input type="password" placeholder="Senha" />
-        <Button type="submit">Entrar</Button>
+    <div style={{ padding: "20px" }}>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
+        <div>
+          <label>Senha:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <button type="submit">Entrar</button>
       </form>
-    </FormContainer>
+    </div>
   );
 };
 
