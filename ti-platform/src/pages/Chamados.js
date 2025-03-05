@@ -14,6 +14,7 @@ const Chamados = () => {
   const [editando, setEditando] = useState(null);
   const [filtroPrioridade, setFiltroPrioridade] = useState("Todos");
   const [ordenacao, setOrdenacao] = useState("Prioridade");
+  const [nomeUsuario, setNomeUsuario] = useState(""); // Estado para armazenar o nome do usuário
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,6 +22,8 @@ const Chamados = () => {
       if (!user) {
         toast.error("Você precisa estar logado!");
         navigate("/login");
+      } else {
+        setNomeUsuario(user.displayName || "Usuário Desconhecido"); // Define o nome do usuário
       }
     });
     return () => unsubscribe();
@@ -46,6 +49,7 @@ const Chamados = () => {
       titulo, 
       descricao, 
       prioridade,
+      nomeUsuario, // Adiciona o nome do usuário ao chamado
       dataCriacao: new Date() // Adiciona a data de criação do chamado
     };
 
@@ -175,6 +179,7 @@ const Chamados = () => {
             <strong>{chamado.titulo}</strong>
             <p>{chamado.descricao}</p>
             <p><strong>Prioridade:</strong> {chamado.prioridade}</p>
+            <p><strong>Criado por:</strong> {chamado.nomeUsuario}</p>
             <p><strong>Criado:</strong> {calcularTempo(chamado.dataCriacao)}</p>
             <button onClick={() => handleDelete(chamado.id)}>Excluir</button>
             <button onClick={() => handleEdit(chamado)}>Editar</button>
