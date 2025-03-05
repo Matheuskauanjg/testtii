@@ -1,0 +1,55 @@
+/* Sidebar.css */
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #333;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+  }
+  
+  .sidebar ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .sidebar ul li {
+    margin-bottom: 15px;
+  }
+  
+  .sidebar ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+  }
+  
+  .logout-button {
+    margin-top: auto;
+    padding: 10px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  /* Layout.css */
+  .layout {
+    display: flex;
+  }
+  
+  .content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  
+  /* Chamados.css */
+  .chamados-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
