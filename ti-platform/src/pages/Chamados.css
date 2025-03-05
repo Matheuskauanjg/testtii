@@ -1,0 +1,233 @@
+/* Resetando estilos padrão */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+  
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    padding: 20px;
+}
+  
+/* Menu */
+nav {
+    background-color: #343a40;  /* Cor de fundo escura para o menu */
+    padding: 10px;
+}
+  
+nav ul {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;  /* Espaçamento entre os itens do menu */
+    list-style: none;
+}
+  
+nav ul li {
+    display: inline-block;
+}
+  
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 8px 16px;
+    display: inline-block;
+    background-color: transparent; /* Sem fundo para evitar o quadrado branco */
+    border-radius: 5px; /* Apenas arredondando os cantos */
+}
+  
+nav ul li a:hover {
+    background-color: #495057;
+}
+  
+nav ul li button {
+    background-color: #dc3545;
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+  
+nav ul li button:hover {
+    background-color: #c82333;
+}
+  
+/* Contêiner principal */
+.container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 900px; /* Limite da largura */
+    margin: 0 auto;
+    padding: 20px;
+}
+  
+/* Título */
+h2 {
+    font-size: 1.6rem;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #007bff;
+}
+  
+/* Formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+  
+label {
+    font-size: 1rem;
+    color: #495057;
+}
+  
+input, textarea, select {
+    width: 100%; /* Garantir que todos os campos ocupem 100% de largura disponível */
+    padding: 12px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+  
+input:focus, textarea:focus, select:focus {
+    border-color: #007bff;
+}
+  
+textarea {
+    resize: vertical; /* Permitir redimensionar apenas verticalmente */
+}
+  
+button {
+    padding: 12px;
+    font-size: 1.1rem;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+  
+button:hover {
+    background-color: #0056b3;
+}
+  
+button:disabled {
+    background-color: #d6d8db;
+    cursor: not-allowed;
+}
+  
+/* Filtro e ordenação */
+.select-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+  
+.select-container select {
+    width: 48%; /* Largura de 48% para os selects ficarem alinhados */
+}
+  
+.select-container select:first-child {
+    margin-right: 4%; /* Espaço entre os dois selects */
+}
+  
+/* Lista de Chamados */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+  
+li {
+    background-color: #343a40;  /* Mudar para a cor do menu para o fundo do item */
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    box-shadow: none;  /* Remover a sombra indesejada */
+}
+  
+li strong {
+    display: block;
+    font-size: 1.2rem;
+    color: white;  /* Texto branco para se destacar no fundo escuro */
+}
+  
+li p {
+    font-size: 1rem;
+    color: #ccc;  /* Texto um pouco mais claro para o corpo do item */
+}
+  
+li button {
+    background-color: #dc3545;
+    padding: 8px 16px;
+    margin-right: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: none;
+    color: white;
+}
+  
+li button:hover {
+    background-color: #c82333;
+}
+  
+li button:last-child {
+    background-color: #007bff;
+}
+  
+li button:last-child:hover {
+    background-color: #0056b3;
+}
+  
+/* Responsividade: ajustes para telas menores */
+@media (max-width: 768px) {
+    .select-container {
+        flex-direction: column;
+    }
+  
+    .select-container select {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+  
+    form {
+        gap: 10px;
+    }
+  
+    h2 {
+        font-size: 1.4rem;
+    }
+}
+  
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+        max-width: 100%;
+    }
+  
+    h2 {
+        font-size: 1.2rem;
+    }
+  
+    input, textarea, select, button {
+        font-size: 0.9rem;
+    }
+  
+    .select-container select {
+        padding: 10px;
+    }
+  
+    li {
+        padding: 10px;
+    }
+}

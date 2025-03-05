@@ -1,17 +1,17 @@
-// src/pages/Login.js
+// src/pages/Cadastro.js
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebaseConfig";
 import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Cadastro = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleCadastro = async (e) => {
     e.preventDefault();
 
     if (!email || !senha) {
@@ -20,18 +20,18 @@ const Login = () => {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, senha);
-      toast.success("Login realizado com sucesso!");
-      navigate("/chamados");
+      await createUserWithEmailAndPassword(auth, email, senha);
+      toast.success("Conta criada com sucesso!");
+      navigate("/login"); // Após o cadastro, redireciona para o login
     } catch (error) {
-      toast.error("Erro ao fazer login. Verifique seu email e senha.");
+      toast.error("Erro ao criar conta. Tente novamente.");
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+      <h2>Cadastrar</h2>
+      <form onSubmit={handleCadastro}>
         <div>
           <label>Email:</label>
           <input
@@ -50,11 +50,11 @@ const Login = () => {
             required
           />
         </div>
-        <button type="submit">Entrar</button>
+        <button type="submit">Criar Conta</button>
       </form>
       <ToastContainer />
     </div>
   );
 };
 
-export default Login;
+export default Cadastro;

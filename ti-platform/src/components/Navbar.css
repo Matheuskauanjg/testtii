@@ -1,0 +1,97 @@
+/* Estilos gerais para a barra de navegação */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Garantir que o conteúdo se espalhe por todo o espaço */
+    align-items: center;
+    padding: 15px 30px;
+    background-color: #333; /* Cinza escuro para o fundo */
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+  
+/* Menu de navegação */
+.navbar .menu {
+    display: flex;
+    gap: 30px;
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0; /* Remover margens extras */
+}
+  
+.navbar .menu li {
+    padding: 5px 10px;
+}
+  
+.navbar .menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+    padding: 8px 12px;
+    border-radius: 5px; /* Adicionando borda arredondada */
+    background-color: transparent; /* Fundo transparente para os links */
+}
+  
+/* Remover animação e mudar o fundo ao passar o mouse */
+.navbar .menu a:hover {
+    background-color: #444; /* Fundo mais escuro ao passar o mouse */
+    color: white; /* Manter a cor do texto branca */
+}
+  
+/* Botão "Sair" à direita */
+.navbar .logout-button {
+    padding: 8px 15px;
+    background-color: #444; /* Cinza mais claro para o botão */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    border-radius: 5px;
+}
+  
+/* Efeito hover no botão "Sair" */
+.navbar .logout-button:hover {
+    background-color: #555; /* Fundo mais escuro ao passar o mouse */
+}
+  
+/* Responsividade para telas pequenas */
+@media (max-width: 768px) {
+    .navbar {
+      flex-direction: column; /* Colocar tudo em coluna */
+      align-items: flex-start; /* Alinhar à esquerda */
+    }
+  
+    .navbar .menu {
+      flex-direction: column;
+      width: 100%; /* Faz o menu ocupar a largura total */
+      gap: 10px;
+      padding-top: 10px;
+    }
+  
+    .navbar .menu a {
+      width: 100%;
+      text-align: left;
+      padding: 10px;
+      font-size: 1.1rem;
+    }
+  
+    .navbar .logout-button {
+      width: 100%; /* Botão "Sair" também vai para o fundo da tela */
+      margin-top: 10px;
+    }
+}
+  
+/* Ajustes para telas grandes */
+@media (min-width: 1200px) {
+    .navbar {
+      padding: 20px 50px;
+    }
+  
+    .navbar .menu a {
+      font-size: 1.3rem;
+    }
+  
+    .navbar .logout-button {
+      font-size: 1.3rem;
+    }
+}

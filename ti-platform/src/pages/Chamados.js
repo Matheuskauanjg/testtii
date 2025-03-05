@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../firebaseConfig";
-import { collection, addDoc, getDocs, deleteDoc, doc } from "firebase/firestore";
-import { ToastContainer, toast } from "react-toastify";  // Importando o Toastify
-import "react-toastify/dist/ReactToastify.css";  // Importando o CSS do Toastify
+import { db, auth } from "../firebaseConfig";
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { onAuthStateChanged } from "firebase/auth";
+import './Chamados.css'; // Importando o CSS
 
 const Chamados = () => {
   const [titulo, setTitulo] = useState("");
@@ -11,6 +13,18 @@ const Chamados = () => {
   const [chamados, setChamados] = useState([]);
   const [editando, setEditando] = useState(null);
   const [filtroPrioridade, setFiltroPrioridade] = useState("Todos");
+  const [ordenacao, setOrdenacao] = useState("Prioridade");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        toast.error("Você precisa estar logado!");
+        navigate("/login");
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
   useEffect(() => {
     const fetchChamados = async () => {
@@ -21,7 +35,6 @@ const Chamados = () => {
     fetchChamados();
   }, []);
 
-  // AQUI É ONDE VOCÊ COLOCA A FUNÇÃO handleSubmit ALTERADA
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!titulo || !descricao) {
@@ -29,9 +42,13 @@ const Chamados = () => {
       return;
     }
 
-    const novoChamado = { titulo, descricao, prioridade };
+    const novoChamado = { 
+      titulo, 
+      descricao, 
+      prioridade,
+      dataCriacao: new Date() // Adiciona a data de criação do chamado
+    };
 
-    // Verifica se o título já existe
     const tituloExistente = chamados.some(chamado => chamado.titulo === titulo);
     if (tituloExistente) {
       toast.error("Chamado com esse título já existe!");
@@ -40,16 +57,16 @@ const Chamados = () => {
 
     if (editando) {
       const chamadoRef = doc(db, "chamados", editando);
-      await deleteDoc(chamadoRef);
-      await addDoc(collection(db, "chamados"), novoChamado);
+      await updateDoc(chamadoRef, novoChamado);
+      setChamados(chamados.map(chamado => chamado.id === editando ? { ...chamado, ...novoChamado } : chamado));
       setEditando(null);
       toast.success("Chamado atualizado com sucesso!");
     } else {
       await addDoc(collection(db, "chamados"), novoChamado);
+      setChamados([...chamados, { ...novoChamado, id: Math.random().toString() }]);
       toast.success("Chamado criado com sucesso!");
     }
 
-    setChamados([...chamados, novoChamado]);
     setTitulo("");
     setDescricao("");
     setPrioridade("Baixa");
@@ -69,12 +86,46 @@ const Chamados = () => {
     setEditando(chamado.id);
   };
 
-  const chamadosFiltrados = chamados.filter(chamado => 
+  // Filtrando os chamados com base na prioridade selecionada
+  const chamadosFiltrados = chamados.filter(chamado =>
     filtroPrioridade === "Todos" || chamado.prioridade === filtroPrioridade
   );
 
+  // Função para calcular o tempo desde a criação
+  const calcularTempo = (dataCriacao) => {
+    const agora = new Date();
+    const data = dataCriacao.toDate ? dataCriacao.toDate() : new Date(dataCriacao); // Verifica se é um Timestamp do Firestore
+    const diferenca = agora - data;
+    const dias = Math.floor(diferenca / (1000 * 60 * 60 * 24));
+    const horas = Math.floor((diferenca % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutos = Math.floor((diferenca % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (dias > 0) return `${dias} dias atrás`;
+    if (horas > 0) return `${horas} horas atrás`;
+    return `${minutos} minutos atrás`;
+  };
+
+  // Função para ordenar os chamados
+  const ordenarChamados = (chamados) => {
+    if (ordenacao === "Prioridade") {
+      return chamados.sort((a, b) => {
+        const prioridadeOrder = { Baixa: 1, Média: 2, Alta: 3 };
+        return prioridadeOrder[a.prioridade] - prioridadeOrder[b.prioridade];
+      });
+    } else if (ordenacao === "Data") {
+      return chamados.sort((a, b) => {
+        const dataA = a.dataCriacao?.toDate ? a.dataCriacao.toDate() : new Date(a.dataCriacao);
+        const dataB = b.dataCriacao?.toDate ? b.dataCriacao.toDate() : new Date(b.dataCriacao);
+        return dataA - dataB; // Ordena pela data de criação
+      });
+    }
+    return chamados;
+  };
+
+  const chamadosOrdenados = ordenarChamados(chamadosFiltrados);
+
   return (
-    <div style={{ padding: "20px" }}>
+    <div className="container">
       <h2>{editando ? "Editar Chamado" : "Abrir Chamado"}</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -96,40 +147,41 @@ const Chamados = () => {
         </div>
         <div>
           <label>Prioridade:</label>
-          <select value={prioridade} onChange={(e) => setPrioridade(e.target.value)}>
+          <select value={prioridade} onChange={(e) => setPrioridade(e.target.value)} required>
             <option value="Baixa">Baixa</option>
             <option value="Média">Média</option>
             <option value="Alta">Alta</option>
           </select>
         </div>
-        <button type="submit">
-          {editando ? "Salvar Alterações" : "Abrir Chamado"}
-        </button>
+        <button type="submit">{editando ? "Atualizar Chamado" : "Criar Chamado"}</button>
       </form>
 
-      <div style={{ marginTop: "20px" }}>
-        <label>Filtrar por Prioridade:</label>
-        <select value={filtroPrioridade} onChange={(e) => setFiltroPrioridade(e.target.value)}>
+      <div className="select-container">
+        <select onChange={(e) => setFiltroPrioridade(e.target.value)} value={filtroPrioridade}>
           <option value="Todos">Todos</option>
           <option value="Baixa">Baixa</option>
           <option value="Média">Média</option>
           <option value="Alta">Alta</option>
         </select>
+        <select onChange={(e) => setOrdenacao(e.target.value)} value={ordenacao}>
+          <option value="Prioridade">Por Prioridade</option>
+          <option value="Data">Por Data</option>
+        </select>
       </div>
 
-      <h3>Chamados Abertos</h3>
       <ul>
-        {chamadosFiltrados.map((chamado) => (
-          <li key={chamado.id}>
-            <strong>{chamado.titulo}</strong> - {chamado.prioridade}
+        {chamadosOrdenados.map(chamado => (
+          <li key={chamado.id} className="chamado-item">
+            <strong>{chamado.titulo}</strong>
             <p>{chamado.descricao}</p>
+            <p><strong>Prioridade:</strong> {chamado.prioridade}</p>
+            <p><strong>Criado:</strong> {calcularTempo(chamado.dataCriacao)}</p>
+            <button onClick={() => handleDelete(chamado.id)}>Excluir</button>
             <button onClick={() => handleEdit(chamado)}>Editar</button>
-            <button onClick={() => handleDelete(chamado.id)}>Deletar</button>
           </li>
         ))}
       </ul>
 
-      {/* Contêiner de notificações */}
       <ToastContainer />
     </div>
   );
